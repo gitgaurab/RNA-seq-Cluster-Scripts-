@@ -41,3 +41,8 @@ htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq
 htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_3_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_3_24hr.htseq.counts
 htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_3_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_3_48hr.htseq.counts
 htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_3_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_3_96hr.htseq.counts
+
+
+####Some useful links for DESeq2
+https://youtu.be/UFB993xufUU
+https://www.youtube.com/watch?v=sQ870aTKqiM
