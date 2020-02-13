@@ -1,1 +1,43 @@
 ##Command lines for FASTQC for paired-end reads RNA seq data
+
+
+
+#######HTseq command lines with gft file########
+#PBS -S /bin/bash
+#PBS -q highmem_q
+#PBS -N htseq_all
+#PBS -l nodes=1:ppn=10   
+#PBS -l walltime=140:00:00
+#PBS -l mem=64gb
+
+cd $PBS_O_WORKDIR
+
+module load HTSeq/0.9.1-foss-2016b-Python-2.7.14
+
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_1_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_1_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_1_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_1_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_1_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_1_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_2_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_2_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_2_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_2_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_2_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_2_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_3_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_3_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_3_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_3_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Control_3_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_3_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_1_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_1_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_1_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_1_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_1_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_1_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_2_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_2_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_2_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_2_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_2_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_2_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_3_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_3_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_3_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_3_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/Pa-OK-11_3_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Pa-OK-11_3_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_1_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_1_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_1_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_1_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_1_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_1_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_2_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_2_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_2_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_2_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_2_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_2_96hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_3_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_3_24hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_3_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_3_48hr.htseq.counts
+htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/rRNA/star_unaligned_mapping/output_star/De-Tif-11_3_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/De-Tif-11_3_96hr.htseq.counts
