@@ -45,4 +45,4 @@ htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq
 
 ####Some useful links for DESeq2
 https://youtu.be/UFB993xufUU
-https://www.youtube.com/watch?v=sQ870aTKqiM
+https://lashlock.github.io/compbio/R_presentation.html
