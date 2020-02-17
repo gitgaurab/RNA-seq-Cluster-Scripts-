@@ -1,0 +1,66 @@
+###Make sure the R and R studio has their recent version installed. 
+##Many packages will not be installed if you have older R version.
+##Install BiocManager and Deseq2 with following command line####
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("DESeq2")
+library(DESeq2)
+library(ggplot2)##Open (intall before if there is not one) ggplot####
+directory<-"../counts/" ##Assigning a directory
+count<-read.csv("../counts_data.csv",header = TRUE) ##Count data
+meta<-read.csv("../metadata.csv",header = TRUE) ##Metadata
+dds<-DESeqDataSetFromMatrix(countData=count,colData=meta, design=~group, tidy = TRUE) ####Load the count and metadata and make DESeq2 file
+dds
+dds<-DESeq(dds)
+res<-results(dds)
+res
+##Using contrast function to perform pairwise DE between control and treatment for each time point
+##Provided alpha=0.05
+res_24_Ct_De<-results(dds,contrast=c('group','De-Tif-11_24hr','Ctrl_24hr'),alpha = 0.05)
+res_48_Ct_De<-results(dds,contrast=c('group','De-Tif-11_48hr','Ctrl_48hr'),alpha = 0.05)
+res_96_Ct_De<-results(dds,contrast=c('group','De-Tif-11_96hr','Ctrl_96hr'),alpha = 0.05)
+res_24_Ct_Pa<-results(dds,contrast=c('group','Pa-OK-11_24hr','Ctrl_24hr'),alpha = 0.05)
+res_48_Ct_Pa<-results(dds,contrast=c('group','Pa-OK-11_48hr','Ctrl_48hr'),alpha = 0.05)
+res_96_Ct_Pa<-results(dds,contrast=c('group','Pa-OK-11_96hr','Ctrl_96hr'),alpha = 0.05)
+summary(res_96_Ct_Pa)
+res_24_Ct_De_ordered<-res_24_Ct_De[order(res_24_Ct_De$pvalue),]
+res_48_Ct_De_ordered<-res_48_Ct_De[order(res_48_Ct_De$pvalue),]
+res_96_Ct_De_ordered<-res_96_Ct_De[order(res_96_Ct_De$pvalue),]
+res_24_Ct_Pa_ordered<-res_24_Ct_Pa[order(res_24_Ct_Pa$pvalue),]
+res_48_Ct_Pa_ordered<-res_48_Ct_Pa[order(res_48_Ct_Pa$pvalue),]
+res_96_Ct_Pa_ordered<-res_96_Ct_Pa[order(res_96_Ct_Pa$pvalue),]
+
+
+##Exporting ordered result
+write.csv(as.data.frame(res_96_Ct_Pa_ordered),file="../DExpression results for each time point/96_Ct_Pa.csv")
+##Volcano plot
+plotMA(res_24_Ct_De_ordered,main="24_Ct_De", ylim=c(-2,2))
+
+res_24_Ct_De_p_0.05_lfc_1.5<-results(dds,contrast=c('group','De-Tif-11_24hr','Ctrl_24hr'),alpha = 0.05,lfcThreshold = 1.5)
+
+summary(res_24_Ct_De_p_0.05_lfc_1.5)
+
+LFC_shrink_24_Ct_De_p_0.05<- lfcShrink(dds=dds,contrast=c('group','Ctrl_24hr','De-Tif-11_24hr'),alpha=0.05)
+plotMA(LFC_shrink_24_Ct_De_p_0.05,ylim=c(-2,2))
+summary(res_24_Ct_De)
+res_24_Ct_De_p_0.05<-results(dds,contrast=c('group','Ctrl_24hr','De-Tif-11_24hr'),alpha = 0.05)
+summary(res_24_Ct_De_p_0.05)
+##Volcano plot
+##reset par
+par(mfrow=c(1,1))
+# Make a basic volcano plot
+with(res_96_Ct_Pa_ordered, plot(log2FoldChange, -log10(pvalue), pch=20, main="Volcano plot 96hr_Ct/Pa-OK-11", xlim=c(-3,3)))
+### Add colored points: blue if padj<0.01, red if log2FC>1 and padj<0.05)
+with(subset(res_96_Ct_Pa_ordered, padj<.01 ), points(log2FoldChange, -log10(pvalue), pch=20, col="blue"))
+with(subset(res_96_Ct_Pa_ordered, padj<.01 & abs(log2FoldChange)>2), points(log2FoldChange, -log10(pvalue), pch=20, col="red"))
+##VP_24hr_Ct_vs_Pa-OK-11
+plotMA(res_24_Ct_De_p_0.05,ylim=c(-2,2))
+##PCA
+vsdata <- vst(dds, blind=FALSE)###Transformation
+pcadata<-plotPCA(vsdata, intgroup=c("condition","time"),returnData=TRUE)##PCA plot
+percentVar<-round(100*attr(pcadata,"percentVar"))
+pca<-ggplot(pcadata,aes(PC1,PC2,color=condition,shape=time))+geom_point(size=3)+xlab(paste0("PC1: ",percentVar[1],"% variance"))+ylab(paste0("PC2: ",percentVar[2],"% variance"))+coord_fixed()
+##Save plot
+ggsave(device="png",pca,dpi = 1500,filename = "../Figures/PCAplot.png")####ggsave function to save a high quality image
+####
+plotPCA(vsdata, intgroup=c("condition","time"),ntop=500)##for top 500 genes
