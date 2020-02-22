@@ -1,4 +1,4 @@
-STAR --runThreadN 10 --runMode genomeGenerate --genomeDir ./index_rna --genomeFastaFiles ./silva_fasta/SILVA_132_LSURef_tax_silva_DNA.fasta ./silva_fasta/SILVA_138_SSURef_tax_silva_DNA.fasta
+STAR --runThreadN 10 --runMode genomeGenerate --genomeDir ./index_rna --genomeFastaFiles ./silva_fasta/SILVA_132_LSURef_tax_silva_DNA.fasta ./silva_fasta/SILVA_138_SSURef_tax_silva_DNA.fasta --limitGenomeGenerateRAM=142084870869
 STAR --runThreadN 10 --genomeDir ./index_rna/  --readFilesIn ./trimmed/Control_1_24hr_P_R1.fq ./trimmed/Control_1_24hr_P_R2.fq --outFileNamePrefix ./starout_rna/Control_1_24hr  --outReadsUnmapped Fastx --outSAMtype BAM Unsorted
 STAR --runThreadN 10 --genomeDir ./index_pecan/  --readFilesIn ./starout_rna/Control_1_24hrUnmapped.out.mate1 ./starout_rna/Control_1_24hrUnmapped.out.mate2 --outFileNamePrefix ./starout_pecan/Control_1_24hr  --outReadsUnmapped Fastx --outSAMtype BAM Unsorted
 STAR --runThreadN 10 --genomeDir ./index_rna/  --readFilesIn ./trimmed/Control_1_48hr_P_R1.fq ./trimmed/Control_1_48hr_P_R2.fq --outFileNamePrefix ./starout_rna/Control_1_48hr  --outReadsUnmapped Fastx --outSAMtype BAM Unsorted
