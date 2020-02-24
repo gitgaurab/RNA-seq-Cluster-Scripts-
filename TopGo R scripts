@@ -1,0 +1,25 @@
+###https://bioconductor.org/packages/release/bioc/vignettes/topGO/inst/doc/topGO.pdf
+library(BiocManager)
+BiocManager::install("topGO")
+BiocManager::install("ALL")
+BiocManager::install()
+library("topGO")
+library("ALL")
+data("ALL")
+data<-data("geneList")
+affyLib <- paste(annotation(ALL), "db", sep = ".")
+library(package = affyLib, character.only = TRUE)
+head(affyLib)
+
+GO<-read.csv("C:/Users/Gaurab/OneDrive - University of Georgia/RNA_seq_Experiment/Final analysis_RNA_seq_SILVA_STAR/GO term file/GO_universe.csv",header = TRUE)
+GO_merge<-aggregate(data=GO,term~gene_id,paste,collapse=",")
+head(GO_merge)
+write.csv(GO_merge,"C:/Users/Gaurab/OneDrive - University of Georgia/RNA_seq_Experiment/Final analysis_RNA_seq_SILVA_STAR/GO term file/gofile.csv")
+######
+geneIDtoGO<-readMappings("../../Final analysis_RNA_seq_SILVA_STAR/GO term file/annotation.txt")
+geneuniverse<-names(geneIDtoGO)
+geneofinterest<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO term file/gene_of_interest_sample_24HR_De-Tif-11.txt",header = FALSE)
+geneofinterest<-as.character(geneofinterest$V1)
+geneList <- factor(as.integer(geneuniverse %in% geneofinterest))
+names(geneList) <- geneuniverse
+myGOdata <- new("topGOdata", description="My project", ontology="BP", allGenes=geneList,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
