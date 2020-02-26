@@ -1,0 +1,102 @@
+###https://bioconductor.org/packages/release/bioc/vignettes/topGO/inst/doc/topGO.pdf
+library(BiocManager)
+BiocManager::install("topGO")
+BiocManager::install()
+library("topGO")
+GO<-read.csv("C:/Users/Gaurab/OneDrive - University of Georgia/RNA_seq_Experiment/Final analysis_RNA_seq_SILVA_STAR/GO term file/GO_universe.csv",header = TRUE)
+GO_merge<-aggregate(data=GO,term~gene_id,paste,collapse=",")
+head(GO_merge)
+write.csv(GO_merge,"C:/Users/Gaurab/OneDrive - University of Georgia/RNA_seq_Experiment/Final analysis_RNA_seq_SILVA_STAR/GO term file/gofile.csv")
+###########################Analysis part###########
+##Upload gene universe (list of genes and corresponding GO terms)
+geneIDtoGO<-readMappings("../../Final analysis_RNA_seq_SILVA_STAR/GO term file/annotation.txt")
+###Create a geneuniverse by extracting names from geneIDtoGO file.
+geneuniverse<-names(geneIDtoGO)
+###(Upload list of gene of interest)
+deg_24_De<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/De-Tif_24hr.txt",header = FALSE)
+deg_48_De<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/De-Tif_48hr.txt",header = FALSE)
+deg_96_De<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/De-Tif_96hr.txt",header = FALSE)
+deg_24_Pa<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/Pa-OK_24hr.txt",header = FALSE)
+deg_48_Pa<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/Pa-OK_48hr.txt",header = FALSE)
+deg_96_Pa<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/Pa-OK_96hr.txt",header = FALSE)
+
+
+
+#####Below is a format#########################
+geneofinterest<-read.table("../../Final analysis_RNA_seq_SILVA_STAR/GO term file/gene_of_interest_sample_24HR_De-Tif-11.txt",header = FALSE)
+###############################################
+deg_24_De<-as.character(deg_24_De$V1)
+deg_48_De<-as.character(deg_48_De$V1)
+deg_96_De<-as.character(deg_96_De$V1)
+deg_24_Pa<-as.character(deg_24_Pa$V1)
+deg_48_Pa<-as.character(deg_48_Pa$V1)
+deg_96_Pa<-as.character(deg_96_Pa$V1)
+
+
+#####Below is a format##############################
+geneofinterest<-as.character(geneofinterest$V1)#####
+####################################################
+
+##Create a gene list (Genes of interest within gene universe)
+###Below is the format##############################################
+geneList <- factor(as.integer(geneuniverse %in% geneofinterest))####
+####################################################################
+names(geneList) <- geneuniverse#################
+################################################
+geneList_24_De<-factor(as.integer(geneuniverse %in% deg_24_De))
+geneList_48_De<-factor(as.integer(geneuniverse %in% deg_48_De))
+geneList_96_De<-factor(as.integer(geneuniverse %in% deg_96_De))
+
+geneList_24_Pa<-factor(as.integer(geneuniverse %in% deg_24_Pa))
+geneList_48_Pa<-factor(as.integer(geneuniverse %in% deg_48_Pa))
+geneList_96_Pa<-factor(as.integer(geneuniverse %in% deg_96_Pa))
+
+names(geneList_24_De)<-geneuniverse
+names(geneList_48_De)<-geneuniverse
+names(geneList_96_De)<-geneuniverse
+
+names(geneList_24_Pa)<-geneuniverse
+names(geneList_48_Pa)<-geneuniverse
+names(geneList_96_Pa)<-geneuniverse
+####Create a GO dataset below is the format ##################################################
+myGOdata <- new("topGOdata", description="My project", ontology="BP", allGenes=geneList,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
+############################################################################
+GOdata_24_De<-new("topGOdata", description="My project 24_De", ontology="BP", allGenes=geneList_24_De,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
+GOdata_48_De<-new("topGOdata", description="My project 48_De", ontology="BP", allGenes=geneList_48_De,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
+GOdata_96_De<-new("topGOdata", description="My project 96_De", ontology="BP", allGenes=geneList_96_De,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
+
+GOdata_24_Pa<-new("topGOdata", description="My project 24_Pa", ontology="BP", allGenes=geneList_24_Pa,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
+GOdata_48_Pa<-new("topGOdata", description="My project 24_Pa", ontology="BP", allGenes=geneList_48_Pa,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
+GOdata_96_Pa<-new("topGOdata", description="My project 24_Pa", ontology="BP", allGenes=geneList_96_Pa,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)
+
+##Visualize GO dataset
+myGOdata##############
+###Analysing the dataset
+###The algorithm argument is optional and if not specified the weight01 method will be used 
+### will give topGOresult object.
+###resultFisher <- runTest(myGOdata, algorithm="classic", statistic="fisher")
+resultFisher<-runTest(myGOdata,statistic = "fisher")#########
+#############################################################
+resultFisher_24_De<-runTest(GOdata_24_De,statistic = "fisher")
+resultFisher_48_De<-runTest(GOdata_48_De,statistic = "fisher")
+resultFisher_96_De<-runTest(GOdata_96_De,statistic = "fisher")
+
+resultFisher_24_Pa<-runTest(GOdata_24_Pa,statistic = "fisher")
+resultFisher_48_Pa<-runTest(GOdata_48_Pa,statistic = "fisher")
+resultFisher_96_Pa<-runTest(GOdata_96_Pa,statistic = "fisher")
+
+##################
+###Result in tabular form
+
+############ Example script###############
+allRes <- GenTable(myGOdata, classicFisher = resultFisher, orderBy = "resultFisher", ranksOf = "classicFisher", topNodes = 10)
+#########################
+Table_24_De<-GenTable(GOdata_24_De,classicFisher = resultFisher_24_De,orderBy ="resultFisher_24_De",ranksOf="classicFisher",topNodes=20)
+Table_48_De<-GenTable(GOdata_48_De,classicFisher = resultFisher_48_De,orderBy ="resultFisher_48_De",ranksOf="classicFisher",topNodes=20)
+Table_96_De<-GenTable(GOdata_96_De,classicFisher = resultFisher_96_De,orderBy ="resultFisher_96_De",ranksOf="classicFisher",topNodes=20)
+Table_24_Pa<-GenTable(GOdata_24_Pa,classicFisher = resultFisher_24_Pa,orderBy ="resultFisher_24_Pa",ranksOf="classicFisher",topNodes=20)
+Table_48_Pa<-GenTable(GOdata_48_Pa,classicFisher = resultFisher_48_Pa,orderBy ="resultFisher_48_Pa",ranksOf="classicFisher",topNodes=20)
+Table_96_Pa<-GenTable(GOdata_96_Pa,classicFisher = resultFisher_96_Pa,orderBy ="resultFisher_96_Pa",ranksOf="classicFisher",topNodes=20)
+
+#####Export the result table to csv##########
+write.csv(Table_96_Pa,"../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/96-Pa_GO_enriched.csv")
