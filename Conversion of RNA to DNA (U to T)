@@ -1,0 +1,14 @@
+#PBS -S /bin/bash
+#PBS -q highmem_q
+#PBS -N rna-dna
+#PBS -l nodes=1
+#PBS -l walltime=48:00:00
+#PBS -l mem=64gb
+
+cd $PBS_O_WORKDIR
+
+more SILVA_138_SSURef_tax_silva.fasta | awk '/^>/ {printf("%s%s\t",(N>0?"\n":""),$0);N++;next;} {printf("%s",$0);} END {printf("\n");}'| sed 's/\t/\n/g'| while read L; do echo $L; read L; echo "$L" | tr "U" "T"; done > SILVA_138_SSURef_tax_silva_DNA.fasta
+more SILVA_132_LSURef_tax_silva.fasta | awk '/^>/ {printf("%s%s\t",(N>0?"\n":""),$0);N++;next;} {printf("%s",$0);} END {printf("\n");}'| sed 's/\t/\n/g'| while read L; do echo $L; read L; echo "$L" | tr "U" "T"; done > SILVA_132_LSURef_tax_silva_DNA.fasta
+
+####Note this script will creates a fasta file but it has few lines in header which are other than fasta format. So, I would just open fasta as 'nano file.fasta' and remove the unwanted header.
+###Two silva files (in DNA format) were then concactenated into the single fasta file (rna.fasta).
