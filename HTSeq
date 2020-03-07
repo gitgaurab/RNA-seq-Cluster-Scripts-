@@ -1,3 +1,23 @@
+####NOTE: The gff3 file was fist converted into GTF format file using following script####
+## -- unzip gff3 file
+gunzip -d ORGANISM.gene_exons.gff3.gz
+## -- use gffread from CUFFLINKS to generate GTF file (http://cole-trapnell-lab.github.io/cufflinks/file_formats/#the-gffread-utility
+ml gffread/0.9.12-foss-2016b
+gffread -E ORGANISM.gene_exons.gff3 -T -o ORGANISM.gene_exons.gtf
+
+
+
+#PBS -S /bin/bash
+#PBS -q highmem_q
+#PBS -N htseq_control
+#PBS -l nodes=1:ppn=10
+#PBS -l walltime=140:00:00
+#PBS -l mem=90gb
+
+cd $PBS_O_WORKDIR
+
+module load HTSeq/0.9.1-foss-2016b-Python-2.7.14
+
 htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/new_method/starout_pecan/Control_1_24hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_1_24hr.htseq.counts
 htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/new_method/starout_pecan/Control_1_48hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_1_48hr.htseq.counts
 htseq-count -f bam -r pos -s reverse -t exon -i gene_id /scratch/gb92068/RNA_seq/new_method/starout_pecan/Control_1_96hrAligned.out.bam /scratch/gb92068/RNA_seq/ref_annot/Elliott_1.2.gtf --minaqual 10 > ./counts/Control_1_96hr.htseq.counts
