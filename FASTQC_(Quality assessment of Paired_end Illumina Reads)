@@ -1,0 +1,13 @@
+#PBS -S /bin/bash
+#PBS -q highmem_q
+#PBS -N FastQC_Quality_assessment_RNA_Seq_54_files
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=140:00:00
+#PBS -l mem=64gb
+
+cd $PBS_O_WORKDIR
+ml FastQC/0.11.8-Java-1.8.0_144
+time bzgrep ./raw_reads/*.fastq.bz2 | fastqc stdin:usethisname
+
+####The original reads were .fastq.bz2. So, they were unzipped and checked with FASTQc command.
+#####Output is log file in zipped and html format.
