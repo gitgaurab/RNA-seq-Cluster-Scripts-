@@ -100,3 +100,22 @@ Table_96_Pa<-GenTable(GOdata_96_Pa,classicFisher = resultFisher_96_Pa,orderBy ="
 
 #####Export the result table to csv##########
 write.csv(Table_96_Pa,"../../Final analysis_RNA_seq_SILVA_STAR/GO_analysis/96-Pa_GO_enriched.csv")
+
+
+##############################################################################
+######Save GO enrichment (TOP20) table with corresponding gene names###########
+Table_24_De$genes<-sapply(Table_24_De$GO.ID,function(x)
+{
+  genes<-genesInTerm(GOdata_24_De,x)
+  genes[[1]][genes[[1]]%in% deg_24_De]
+})
+
+##View(Table_48_De)
+
+Table_24_De$genes = as.character(Table_24_De$genes)
+Table_24_De$genes <- gsub("[c()]","",Table_24_De$genes)
+Table_24_De$genes <- gsub("[)]","",Table_24_De$genes)
+Table_24_De$genes <- gsub("[\"]","",Table_24_De$genes)
+Table_24_De <- as.data.frame(Table_24_De)
+write.csv(Table_24_De, file = "../../87Max/GO_enrichment_analysis/Result_all_genes_BP/24_De_all.csv")
+
