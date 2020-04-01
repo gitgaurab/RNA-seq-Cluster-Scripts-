@@ -1,0 +1,74 @@
+##Prerequisite:We should have two different txt files; 1. file with GO terms for entire genes in the genome (gene universe file) and 2. list of genes under investigation
+###Format (genes and GO terms in the entire genome) (Ignore # sign)
+
+#Caillv11000003m.g	GO:0005524,GO:0004386,GO:0003723,GO:0003676,GO:0005634,GO:0008270
+#Caillv11000023m.g	GO:0016787
+#Caillv11000030m.g	GO:0046983
+#Caillv11000040m.g	GO:0016021
+#Caillv11000041m.g	GO:0005680,GO:0004842
+#Caillv11000045m.g	GO:0005515
+#Caillv11000046m.g	GO:0006355,GO:0007275,GO:0003700
+
+###Format (gene list) (Ignore # sign)
+
+#Caillv11005194m.g
+#Caillv11057452m.g
+#Caillv11071193m.g
+#Caillv11030867m.g
+#Caillv11014081m.g
+#Caillv11081848m.g
+#Caillv11039377m.g
+
+###R-script
+###Open a new project in a new folder. Create 2 different folders within it. 1. data and 2. results. Copy your gene universe and gene list txt files into 'data' folder. 
+##Install topGO and tidyverse packages in your R-studio
+
+##Copy and paste script between two line here
+
+##########################################################################################################################
+# Rinse
+rm(list=ls())
+
+# Dependencies
+library("topGO")
+library(tidyverse)
+
+##Lets upload the list of genes from entire genome
+
+geneIDtoGO<-readMappings("data/annotation.txt")  ####Upload your file-1 eg.annotation.txt
+geneuniverse<-names(geneIDtoGO)
+
+##Now let's write down the function for each gene list
+
+from_txt_to_GO_table<-function(df) {
+  df<-as.character(df$V1)
+  geneList_df<-factor(as.integer(geneuniverse %in% df))
+  names(geneList_df)<-geneuniverse
+  GOdata<<-new("topGOdata", description="My project", ontology="BP", allGenes=geneList_df,  annot = annFUN.gene2GO, gene2GO = geneIDtoGO,nodeSize=10)->GOdata ##Biological function##
+  resultFisher_df<-runTest(GOdata,statistic = "fisher")
+  Table_df<-GenTable(GOdata,classicFisher = resultFisher_df,orderBy ="resultFisher_df",ranksOf="classicFisher",topNodes=20) ##Fisher test is applied## Top 20 GO terms are extracted##
+}
+
+create_df<-function(df){
+  df<-as.character(df$V1)
+}
+##Upload the gene list and apply function 'from_txt_to_GO_table'
+read.table("data/24_De_up.txt",header = FALSE)%>% from_txt_to_GO_table() -> sample1 ####Upload your list for gene of interest eg.24_De_up.txt
+read.table("data/24_De_up.txt",header = FALSE)%>% create_df() ->df ######Upload your list for gene of interest eg.24_De_up.txt
+
+###Function to extract top 20 GO terms with list of genes in each term
+sample1$genes<-sapply(sample1$GO.ID,function(x)
+{
+  genes<-genesInTerm(GOdata,x)
+  genes[[1]][genes[[1]]%in% df]
+})
+
+##Polish and save as csv
+
+sample1$genes = as.character(sample1$genes)
+sample1$genes <- gsub("[c()]","",sample1$genes)
+sample1$genes <- gsub("[)]","",sample1$genes)
+sample1$genes <- gsub("[\"]","",sample1$genes)
+sample1 <- as.data.frame(sample1)
+write.csv(sample1, file = "results/sample1.csv") ####Change name of output file as required e.g. sample1.csv, sample2.csv etc.
+####################################################################################################################
